@@ -1,0 +1,78 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+
+  maildev:
+    build:
+      context: .
+      dockerfile: maildev.Dockerfile
+    ports:
+      - ${MAIL_CLIENT_PORT}:1080
+      - ${MAIL_PORT}:1025
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - ${DATABASE_PORT}:3306
+    volumes:
+      - boilerplate-db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+
+  oracle:
+    image: wnameless/oracle-xe-11g-r2:18.04-apex
+    container_name: OracleDb
+    restart: always
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
+      - ORACLE_DISABLE_ASYNCH_IO=true
+      - ORACLE_ENABLE_XDB=true
+    ports:
+      - 5019:1521
+      - 5020:8080
+
+  dbeaver:
+    image: dbeaver/cloudbeaver:22.1.1
+    container_name: CloudBeaver
+    restart: unless-stopped
+    volumes:
+      - dbeaver-data:/opt/cloudbeaver/workspace
+    ports:
+      - 5021:8978
+
+  mongo:
+    image: mongo:4.4.2
+    container_name: MongoDB
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=chats
+    ports:
+      - 5015:27017
+    volumes:
+      - mongodb-data:/data/db
+
+  mongo_client:
+    image: mongoclient/mongoclient:4.0.1
+    container_name: Nosqlclient
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 5016:3000
+
+volumes:
+  boilerplate-db:
+  dbeaver-data:
+  mongodb-data:
+
+# REFERENCES
+# https://www.codeproject.com/Tips/5336563/Run-Database-and-GUI-Clients-in-Docker
+
+
