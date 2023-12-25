@@ -27,6 +27,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
+import { PermissionModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { MailerModule } from './mailer/mailer.module';
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+    PermissionModule,
     UsersModule,
     FilesModule,
     AuthModule,

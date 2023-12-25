@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16.1-alpine
+    container_name: postgres_boilerplate
     ports:
       - ${DATABASE_PORT}:5432
     volumes:
@@ -20,7 +21,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     depends_on:
-      - postgres
+      - postgres_boilerplate
 
   maildev:
     build:
