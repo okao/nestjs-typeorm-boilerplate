@@ -10,7 +10,6 @@ import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import validationOptions from './utils/validation-options';
 import { AllConfigType } from './config/config.type';
-import { LoggerMiddleware } from './middleware/Logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -29,7 +28,6 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.use(new LoggerMiddleware().use);
 
   const options = new DocumentBuilder()
     .setTitle('API')
